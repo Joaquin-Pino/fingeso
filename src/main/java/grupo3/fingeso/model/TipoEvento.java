@@ -1,0 +1,12 @@
+package grupo3.fingeso.model;
+
+public enum TipoEvento {
+    NUEVA_ENTREGA,
+    CORRECCION_DISPONIBLE,
+    PLAZO_PROXIMO,
+    REUNION_AGENDADA,
+    TESIS_HABILITADA,
+    COMISION_ASIGNADA,
+    REASIGNACION_GUIA,
+    CAMBIO_TITULO
+}
