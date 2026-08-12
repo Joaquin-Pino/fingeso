@@ -1,5 +1,6 @@
 package grupo3.fingeso.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.DiscriminatorType;
@@ -42,5 +43,6 @@ public abstract class Usuario {
 
     /** Hash de la contraseña (BCrypt) — nunca se almacena en texto plano (RNF_007). */
     @Column(nullable = false)
+    @JsonIgnore
     private String password;
 }
