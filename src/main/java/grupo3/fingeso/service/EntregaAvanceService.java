@@ -3,6 +3,7 @@ package grupo3.fingeso.service;
 import grupo3.fingeso.model.EntregaAvance;
 import grupo3.fingeso.model.EstadoTesis;
 import grupo3.fingeso.model.Tesis;
+import grupo3.fingeso.model.TipoCambio;
 import grupo3.fingeso.repository.EntregaAvanceRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,8 @@ public class EntregaAvanceService {
 
     private final EntregaAvanceRepository entregaAvanceRepository;
     private final TesisService tesisService;
+    private final HistorialCambioService historialCambioService;
+    private final NotificacionService notificacionService;
 
     // Ruta coherente con los datos de prueba del DataSeeder
     private static final String DIRECTORIO_STORAGE = "/storage/entregas/";
@@ -71,7 +74,20 @@ public class EntregaAvanceService {
                 .tamanioBytes(archivo.getSize())
                 .build();
 
-        return entregaAvanceRepository.save(entrega);
+        EntregaAvance entregaGuardada = entregaAvanceRepository.save(entrega);
+
+        // 8. Registrar el evento en el historial de la tesis (OP-05, RNF_015)
+        historialCambioService.registrarCambio(
+                tesis,
+                tesis.getTesista(),
+                TipoCambio.ENTREGA_AVANCE,
+                "Se registró una nueva entrega de avance: " + nombreOriginal
+        );
+
+        // 9. Notificar al profesor guía por correo (OP-10, RF-019)
+        notificacionService.notificarNuevaEntrega(entregaGuardada);
+
+        return entregaGuardada;
     }
 
     public List<EntregaAvance> obtenerEntregasPorTesis(Long tesisId) {
