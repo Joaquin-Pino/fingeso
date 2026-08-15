@@ -76,7 +76,7 @@ onMounted(fetchAll)
       <h2>Avances entregados</h2>
       <LoadingSpinner v-if="loadingEntregas" />
       <ErrorMessage v-else-if="errorEntregas" :message="errorEntregas" />
-      <EntregaList v-else :entregas="entregas ?? []" />
+      <EntregaList v-else :tesis-id="route.params.id" :entregas="entregas ?? []" />
     </template>
 
     <EntregaUploadModal

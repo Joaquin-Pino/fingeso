@@ -6,11 +6,14 @@ import grupo3.fingeso.model.Tesis;
 import grupo3.fingeso.model.TipoCambio;
 import grupo3.fingeso.repository.EntregaAvanceRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -93,5 +96,40 @@ public class EntregaAvanceService {
     public List<EntregaAvance> obtenerEntregasPorTesis(Long tesisId) {
         // Aprovechamos el metodo personalizado creado por la Persona 1
         return entregaAvanceRepository.findByTesisIdOrderByFechaEntregaDesc(tesisId);
+    }
+
+    // Busca una entrega puntual y valida que efectivamente pertenezca a la tesis indicada
+    // en la URL (evita que se pueda acceder a un archivo de otra tesis adivinando el id).
+    public EntregaAvance obtenerEntregaDeTesis(Long tesisId, Long entregaId) {
+        EntregaAvance entrega = entregaAvanceRepository.findById(entregaId)
+                .orElseThrow(() -> new IllegalArgumentException("La entrega con ID " + entregaId + " no existe."));
+
+        if (!entrega.getTesis().getId().equals(tesisId)) {
+            throw new IllegalArgumentException("La entrega con ID " + entregaId + " no pertenece a la tesis " + tesisId + ".");
+        }
+
+        return entrega;
+    }
+
+    // Carga el archivo físico de una entrega para poder visualizarlo/descargarlo.
+    public Resource cargarArchivo(EntregaAvance entrega) throws MalformedURLException {
+        String directorioActual = System.getProperty("user.dir");
+
+        // Se reconstruye la ruta igual que en registrarEntrega (directorioActual + rutaArchivo)
+        // y se normaliza/valida contra la carpeta raíz de almacenamiento para evitar que una
+        // rutaArchivo corrupta o manipulada permita escapar del directorio de entregas.
+        Path raiz = Paths.get(directorioActual + DIRECTORIO_STORAGE).normalize();
+        Path ruta = Paths.get(directorioActual + entrega.getRutaArchivo()).normalize();
+
+        if (!ruta.startsWith(raiz)) {
+            throw new IllegalStateException("Ruta de archivo inválida.");
+        }
+
+        if (!Files.exists(ruta) || !Files.isReadable(ruta)) {
+            throw new IllegalArgumentException("El archivo de esta entrega ya no está disponible en el servidor.");
+        }
+
+        Resource recurso = new UrlResource(ruta.toUri());
+        return recurso;
     }
 }
