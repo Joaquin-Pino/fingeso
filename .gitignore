@@ -1,5 +1,8 @@
 HELP.md
 target/
+
+### Archivos subidos por CU-07 (avances) — no deben versionarse ###
+storage/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
