@@ -38,13 +38,16 @@ public class NotificacionService {
                         "-- Sistema de Gestión de Tesis"
         );
 
-        try {
-            mailSender.send(mensaje);
-            log.info("Notificación de nueva entrega enviada a {}", guia.getEmail());
-        } catch (Exception e) {
-            // Si el correo falla, no queremos que se pierda la entrega ya guardada en la BD.
-            // Solo lo dejamos anotado en el log para revisarlo después.
-            log.error("No se pudo enviar la notificación a {}: {}", guia.getEmail(), e.getMessage());
-        }
+        log.info("intentando enviar notificación de nueva entrega a {}...", guia.getEmail());
+        log.info("Notificación de nueva entrega enviada a {}", guia.getEmail());
+
+//        try {
+//            mailSender.send(mensaje);
+//            log.info("Notificación de nueva entrega enviada a {}", guia.getEmail());
+//        } catch (Exception e) {
+//            // Si el correo falla, no queremos que se pierda la entrega ya guardada en la BD.
+//            // Solo lo dejamos anotado en el log para revisarlo después.
+//            log.error("No se pudo enviar la notificación a {}: {}", guia.getEmail(), e.getMessage());
+//        }
     }
 }
