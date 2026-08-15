@@ -13,4 +13,13 @@ export const entregaService = {
       onUploadProgress,
     })
   },
+
+  // Descarga el PDF de una entrega puntual como blob, para poder previsualizarlo
+  // o guardarlo (el endpoint exige el JWT en el header Authorization, así que no
+  // se puede enlazar directo con un <a href>).
+  descargarArchivo(tesisId, entregaId) {
+    return http.get(`/tesis/${tesisId}/entregas/${entregaId}/archivo`, {
+      responseType: 'blob',
+    })
+  },
 }
