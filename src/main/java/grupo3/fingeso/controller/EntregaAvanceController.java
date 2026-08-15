@@ -31,13 +31,14 @@ public class EntregaAvanceController {
     public ResponseEntity<?> subirAvance(
             @PathVariable Long id,
             @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "comentario", required = false) String comentario,
             Authentication authentication) {
 
         ResponseEntity<?> acceso = verificarAcceso(id, authentication);
         if (acceso != null) return acceso;
 
         try {
-            EntregaAvance entregaGuardada = entregaAvanceService.registrarEntrega(id, file);
+            EntregaAvance entregaGuardada = entregaAvanceService.registrarEntrega(id, file, comentario);
             return ResponseEntity.status(HttpStatus.CREATED).body(entregaGuardada);
         } catch (IllegalArgumentException | IllegalStateException e) {
             // Manejamos los errores de validación (PDF, Tamaño o Estado de tesis) devolviendo un error 400

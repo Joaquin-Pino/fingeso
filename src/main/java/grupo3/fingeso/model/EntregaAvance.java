@@ -45,6 +45,9 @@ public class EntregaAvance {
 
     private Long tamanioBytes;
 
+    @Column(columnDefinition = "TEXT")
+    private String comentario;
+
     @PrePersist
     void onCreate() {
         if (fechaEntrega == null) {

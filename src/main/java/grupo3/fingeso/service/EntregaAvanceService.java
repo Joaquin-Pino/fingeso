@@ -34,7 +34,7 @@ public class EntregaAvanceService {
     private static final long MAX_FILE_SIZE = 20 * 1024 * 1024;
 
     @Transactional
-    public EntregaAvance registrarEntrega(Long tesisId, MultipartFile archivo) throws IOException {
+    public EntregaAvance registrarEntrega(Long tesisId, MultipartFile archivo, String comentario) throws IOException {
 
         // 1. Validar que la tesis existe utilizando el servicio de la Persona 3
         Tesis tesis = tesisService.obtenerTesisPorId(tesisId)
@@ -75,6 +75,7 @@ public class EntregaAvanceService {
                 .nombreArchivo(nombreOriginal)
                 .rutaArchivo(DIRECTORIO_STORAGE + nombreSeguro)
                 .tamanioBytes(archivo.getSize())
+                .comentario(comentario != null && !comentario.trim().isEmpty() ? comentario.trim() : null)
                 .build();
 
         EntregaAvance entregaGuardada = entregaAvanceRepository.save(entrega);
