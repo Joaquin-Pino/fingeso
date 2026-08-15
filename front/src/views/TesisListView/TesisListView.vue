@@ -8,7 +8,8 @@ import LoadingSpinner from '@/components/LoadingSpinner/LoadingSpinner.vue'
 import ErrorMessage from '@/components/ErrorMessage/ErrorMessage.vue'
 
 const { data: tesisList, loading, error, run } = useAsync([])
-const { isTesista, email } = useAuth()
+// Importamos isProfesor desde useAuth
+const { isTesista, isProfesor, email } = useAuth()
 const estadoFiltro = ref('')
 
 const ESTADOS = [
@@ -29,8 +30,21 @@ function fetchTesis() {
 // cliente, no el único control — la restricción real debe reforzarse también
 // en el backend en cuanto exponga esa relación.
 const visibleTesis = computed(() => {
-  if (!isTesista.value) return tesisList.value ?? []
-  return (tesisList.value ?? []).filter((t) => t.tesista?.email === email.value)
+  const list = tesisList.value ?? []
+
+  // Tesista: solo ve las tesis asociadas a su email
+  if (isTesista.value) {
+    return list.filter((t) => t.tesista?.email === email.value)
+  }
+
+  // Profesor: solo ve las tesis donde es guía o co-guía
+  if (isProfesor.value) {
+    return list.filter(
+      (t) => t.profesorGuia?.email === email.value || t.profesorCoguia?.email === email.value
+    )
+  }
+
+  return list
 })
 
 onMounted(fetchTesis)
