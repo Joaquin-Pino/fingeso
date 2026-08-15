@@ -33,14 +33,15 @@ const roleLabel = {
   align-items: center;
   justify-content: space-between;
   padding: var(--spacing-3) var(--spacing-4);
-  background: var(--color-surface);
-  border-bottom: 1px solid var(--color-border);
+  background: var(--color-navbar-bg);
+  color: var(--color-navbar-text);
+  border-bottom: 3px solid var(--color-primary);
 }
 
 .brand {
   font-weight: 700;
   text-decoration: none;
-  color: var(--color-text);
+  color: var(--color-navbar-text);
 }
 
 .user-info {
@@ -50,14 +51,25 @@ const roleLabel = {
 }
 
 .user-email {
-  color: var(--color-text-muted);
+  color: #e0e0e0;
   font-size: 0.9rem;
 }
 
 .user-role {
-  background: var(--color-bg);
-  border-radius: 999px;
-  padding: 2px 10px;
+  background: rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+  border-radius: var(--radius);
+  padding: 2px 8px;
   font-size: 0.8rem;
+}
+
+button.secondary {
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
 }
 </style>

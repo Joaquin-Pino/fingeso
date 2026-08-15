@@ -5,19 +5,26 @@
 }
 
 :root {
-  --color-bg: #f5f6f8;
+  --color-bg: #f2f4f7;
   --color-surface: #ffffff;
-  --color-border: #dfe3e8;
-  --color-text: #1f2430;
-  --color-text-muted: #5b6472;
-  --color-primary: #2f5fa8;
-  --color-primary-hover: #24488a;
+  --color-border: #dcdcdc;
+  --color-text: #222222;
+  --color-text-muted: #666666;
+
+  /* Paleta UVirtual / USACH */
+  --color-primary: #ea7600;
+  --color-primary-hover: #c86400;
+  --color-navbar-bg: #00325b;
+  --color-navbar-text: #ffffff;
+
   --color-danger: #b3261e;
   --color-danger-bg: #fbe9e7;
   --color-success: #1e7d32;
   --color-success-bg: #e8f5e9;
   --color-warning-bg: #fff4e5;
-  --radius: 8px;
+
+  /* Estilo visual más rígido/humano (menos redondo tipo IA) */
+  --radius: 4px;
   --spacing-1: 4px;
   --spacing-2: 8px;
   --spacing-3: 16px;
