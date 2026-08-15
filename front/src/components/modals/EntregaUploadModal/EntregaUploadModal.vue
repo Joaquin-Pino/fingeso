@@ -13,6 +13,7 @@ const emit = defineEmits(['close', 'uploaded'])
 
 const fileInput = ref(null)
 const selectedFile = ref(null)
+const comentario = ref('')
 const clientError = ref(null)
 const serverError = ref(null)
 const uploading = ref(false)
@@ -37,9 +38,14 @@ async function handleSubmit() {
   progress.value = 0
 
   try {
-    await entregaService.upload(props.tesisId, selectedFile.value, (evt) => {
-      if (evt.total) progress.value = Math.round((evt.loaded / evt.total) * 100)
-    })
+    await entregaService.upload(
+        props.tesisId,
+        selectedFile.value,
+        comentario.value,
+        (evt) => {
+          if (evt.total) progress.value = Math.round((evt.loaded / evt.total) * 100)
+        }
+    )
     emit('uploaded')
     emit('close')
   } catch (err) {
@@ -61,13 +67,24 @@ async function handleSubmit() {
       <div class="form-field">
         <label for="entrega-file">Archivo PDF (máximo 20MB)</label>
         <input
-          id="entrega-file"
-          ref="fileInput"
-          type="file"
-          accept="application/pdf"
-          :disabled="uploading"
-          @change="handleFileChange"
+            id="entrega-file"
+            ref="fileInput"
+            type="file"
+            accept="application/pdf"
+            :disabled="uploading"
+            @change="handleFileChange"
         />
+      </div>
+
+      <div class="form-field">
+        <label for="entrega-comentario">Comentario u observaciones (opcional)</label>
+        <textarea
+            id="entrega-comentario"
+            v-model="comentario"
+            rows="3"
+            placeholder="Describe brevemente los cambios o notas de esta entrega..."
+            :disabled="uploading"
+        ></textarea>
       </div>
 
       <div v-if="uploading" class="progress">
@@ -78,7 +95,11 @@ async function handleSubmit() {
         <button type="button" class="secondary" :disabled="uploading" @click="emit('close')">
           Cancelar
         </button>
-        <button type="button" :disabled="uploading || !selectedFile || !!clientError" @click="handleSubmit">
+        <button
+            type="button"
+            :disabled="uploading || !selectedFile || !!clientError"
+            @click="handleSubmit"
+        >
           {{ uploading ? 'Subiendo…' : 'Subir' }}
         </button>
       </div>
@@ -105,6 +126,23 @@ async function handleSubmit() {
 
 .modal h2 {
   margin-top: 0;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-top: 12px;
+}
+
+.form-field textarea {
+  resize: vertical;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid var(--color-border, #ccc);
+  font-family: inherit;
 }
 
 .modal-actions {

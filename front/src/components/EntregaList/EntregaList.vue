@@ -39,32 +39,41 @@ async function verArchivo(entrega) {
   <p v-if="entregas.length === 0" class="empty">Todavía no hay entregas de avance para esta tesis.</p>
   <table v-else class="entrega-list">
     <thead>
-      <tr>
-        <th>Archivo</th>
-        <th>Fecha de entrega</th>
-        <th>Tamaño</th>
-        <th></th>
-      </tr>
+    <tr>
+      <th>Archivo</th>
+      <th>Comentario / Observaciones</th>
+      <th>Fecha de entrega</th>
+      <th>Tamaño</th>
+      <th></th>
+    </tr>
     </thead>
     <tbody>
-      <tr v-for="entrega in entregas" :key="entrega.id">
-        <td>{{ entrega.nombreArchivo }}</td>
-        <td>{{ formatFecha(entrega.fechaEntrega) }}</td>
-        <td>{{ formatBytes(entrega.tamanioBytes) }}</td>
-        <td class="acciones">
-          <button
+    <tr v-for="entrega in entregas" :key="entrega.id">
+      <td>
+        <span class="file-name">{{ entrega.nombreArchivo }}</span>
+      </td>
+      <td>
+          <span v-if="entrega.comentario" class="comentario-texto">
+            {{ entrega.comentario }}
+          </span>
+        <span v-else class="comentario-vacio">—</span>
+      </td>
+      <td>{{ formatFecha(entrega.fechaEntrega) }}</td>
+      <td>{{ formatBytes(entrega.tamanioBytes) }}</td>
+      <td class="acciones">
+        <button
             type="button"
             class="secondary"
             :disabled="estadoArchivo[entrega.id]?.loading"
             @click="verArchivo(entrega)"
-          >
-            {{ estadoArchivo[entrega.id]?.loading ? 'Abriendo…' : 'Ver archivo' }}
-          </button>
-          <span v-if="estadoArchivo[entrega.id]?.error" class="file-error">
+        >
+          {{ estadoArchivo[entrega.id]?.loading ? 'Abriendo…' : 'Ver archivo' }}
+        </button>
+        <span v-if="estadoArchivo[entrega.id]?.error" class="file-error">
             {{ estadoArchivo[entrega.id].error }}
           </span>
-        </td>
-      </tr>
+      </td>
+    </tr>
     </tbody>
   </table>
 </template>
@@ -84,6 +93,7 @@ async function verArchivo(entrega) {
   text-align: left;
   padding: var(--spacing-2) var(--spacing-3);
   border-bottom: 1px solid var(--color-border);
+  vertical-align: middle;
 }
 
 .entrega-list th {
@@ -91,6 +101,23 @@ async function verArchivo(entrega) {
   color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.02em;
+}
+
+.file-name {
+  font-weight: 500;
+}
+
+.comentario-texto {
+  display: block;
+  max-width: 320px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.9rem;
+  color: var(--color-text, #333);
+}
+
+.comentario-vacio {
+  color: var(--color-text-muted, #888);
 }
 
 .acciones {

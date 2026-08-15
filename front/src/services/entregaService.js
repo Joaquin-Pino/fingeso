@@ -5,9 +5,12 @@ export const entregaService = {
     return http.get(`/tesis/${tesisId}/entregas`)
   },
 
-  upload(tesisId, file, onUploadProgress) {
+  upload(tesisId, file, comentario, onUploadProgress) {
     const formData = new FormData()
     formData.append('file', file)
+    if (comentario && comentario.trim()){
+      formData.append('comentario', comentario.trim())
+    }
     return http.post(`/tesis/${tesisId}/entregas`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
       onUploadProgress,
